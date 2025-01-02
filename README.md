@@ -1,19 +1,118 @@
-# Carhov
-Carhov is a modern carpooling application designed to bridge the gap 
+# CarHov
+CarHov is a modern carpooling application designed to bridge the gap 
 between drivers and passengers, making commuting more efficient, 
 cost-effective, and environmentally friendly. The platform allows 
 users to create and join rides effortlessly by leveraging real-time 
 geolocation, secure payment integration, and smart matching algorithms. 
 
 Whether you're a driver with empty seats or a passenger looking for a 
-convenient ride, Carhov streamlines the process with an intuitive
+convenient ride, CarHov streamlines the process with an intuitive
 interface and powerful backend services built on Spring Boot. 
 Users can easily search for rides based on their origin, destination, and 
 timing preferences, making daily commuting or intercity travel a seamless experience.
 
-## Getting Started
+This repository is strictly for CarHov backend api and services. The front-end
+can be found here... [link to be updated]
 
-### Reference Documentation
+
+## Steps to Run CarHov Locally
+### Step 1: Prerequisites
+1. **Install Java Development Kit (JDK):**
+    - Ensure Java 21 is installed.
+    - Verify by running:
+      ```bash
+      java -version
+      ```
+
+2. **Install a Build Tool:**
+    - Use either **Maven** or **Gradle**, depending on your project setup.
+    - Verify installation with:
+      ```bash
+      mvn -v   # For Maven
+      gradle -v  # For Gradle
+      ```
+
+3. **Set Up Your IDE:**
+    - Use **IntelliJ IDEA** or another Java IDE.
+    - Install necessary plugins for Spring Boot (e.g., Spring Assistant).
+
+4. **Database Setup (if required):**
+    - Ensure your database (e.g., MySQL, PostgreSQL) is installed and running.
+    - Create a database for the application and note its connection details.
+
+---
+
+### Step 2: Import the Project
+1. **Download or Clone the Project:**
+    - If it's hosted on GitHub or another repository, clone it:
+      ```bash
+      git clone <repository-url>
+      cd <project-folder>
+      ```
+
+2. **Open the Project in IntelliJ:**
+    - Select "Open or Import" and choose the project folder.
+    - Wait for IntelliJ to index files and download dependencies (if using Maven/Gradle).
+
+---
+
+### Step 3: Configure 
+`application.properties`
+1. Navigate to `src/main/resources/application.properties` or `application.yml`.
+2. Add or verify the following configurations:
+   ```properties
+   # Server settings
+   server.port=8080
+
+   # Database settings
+   spring.datasource.url=jdbc:mysql://localhost:3306/<your-database>
+   spring.datasource.username=<your-username>
+   spring.datasource.password=<your-password>
+
+   # Hibernate settings
+   spring.jpa.hibernate.ddl-auto=update
+   spring.jpa.show-sql=true
+
+---
+### Step 4: Build the Application
+
+Using Maven:
+Open a terminal in the project folder and run:
+`mvn clean install`
+
+Fix any build errors before proceeding.
+
+---
+
+### Step 5: Run the Application
+
+Using IntelliJ:
+Locate the main class `CarhovApplication.java`.
+Right-click and select Run.
+
+Using Command Line:
+Navigate to the project folder and run:
+Maven:
+`mvn spring-boot:run`
+
+---
+### Step 6: Verify the Application
+
+Open a browser or API testing tool (e.g., Postman).
+Access the version URL:
+http://localhost:8080/api/version
+
+Response should look like:
+```json
+{
+    "application": "carhov",
+    "version": "0.0.1-SNAPSHOT"
+}
+```
+
+---
+
+# Reference Documentation
 
 For further reference, please consider the following sections:
 
