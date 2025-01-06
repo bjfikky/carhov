@@ -5,41 +5,40 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 
 @Entity
-@Getter @Setter @AllArgsConstructor @NoArgsConstructor
-public class CarHovUser {
+@Getter @Setter @NoArgsConstructor @AllArgsConstructor
+public class Booking {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false)
     private Long id;
 
-    private String displayName;
+    @ManyToOne
+    @JoinColumn(nullable = false)
+    private RideSchedule rideSchedule;
 
-    @Column(nullable = false, unique = true)
-    private String email;
-
-    private String phone;
+    @ManyToOne
+    @JoinColumn(nullable = false)
+    private CarHovUser carHovUser;
 
     @Column(nullable = false)
-    private String password;
+    private int seatsBooked;
 
-    private boolean enabled;
-
-    private boolean accountNonLocked;
-
-    private boolean accountNonExpired;
-
-    @Setter(AccessLevel.NONE)
-    @CreationTimestamp
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
+
+    @Setter(AccessLevel.NONE)
+    @UpdateTimestamp
+    private LocalDateTime updatedAt;
 }
