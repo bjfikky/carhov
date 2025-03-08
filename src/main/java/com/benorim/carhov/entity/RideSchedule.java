@@ -53,6 +53,7 @@ public class RideSchedule {
     @Transient // Do not persist this field; it's derived from `daysOfWeek`.
     private List<DayOfWeek> dayList;
 
+    @Column(nullable = false)
     private String daysOfWeek;
 
     private LocalTime departureTime;
