@@ -1,8 +1,8 @@
 package com.benorim.carhov.api;
 
-import com.benorim.carhov.dto.CreateUserDTO;
-import com.benorim.carhov.dto.UpdateUserDTO;
-import com.benorim.carhov.dto.UserDTO;
+import com.benorim.carhov.dto.user.CreateUserDTO;
+import com.benorim.carhov.dto.user.UpdateUserDTO;
+import com.benorim.carhov.dto.user.UserDTO;
 import com.benorim.carhov.entity.CarHovUser;
 import com.benorim.carhov.mapper.CarHovUserMapper;
 import com.benorim.carhov.service.CarHovUserService;

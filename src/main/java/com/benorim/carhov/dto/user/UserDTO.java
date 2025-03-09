@@ -1,4 +1,4 @@
-package com.benorim.carhov.dto;
+package com.benorim.carhov.dto.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
