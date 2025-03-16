@@ -15,3 +15,10 @@ spring:
         hibernate:
             ddl-auto: create-drop
         show-sql: true
+
+app:
+    jwt:
+        # Use a strong secret key in production
+        secret: carhov9753124680SecureSecretKeyForJwtAuthenticationAndAuthorization
+        expirationMs: 3600000      # 1 hour
+        refreshExpirationMs: 86400000   # 24 hours
