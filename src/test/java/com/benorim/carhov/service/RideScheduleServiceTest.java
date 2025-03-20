@@ -116,7 +116,7 @@ class RideScheduleServiceTest {
         List<RideSchedule> result = rideScheduleService.findAllRideSchedules();
 
         assertEquals(1, result.size());
-        assertEquals(1L, result.get(0).getId());
+        assertEquals(1L, result.getFirst().getId());
     }
 
     @Test
@@ -146,7 +146,7 @@ class RideScheduleServiceTest {
         List<RideSchedule> result = rideScheduleService.findRideSchedulesByUserId(1L);
 
         assertEquals(1, result.size());
-        assertEquals(1L, result.get(0).getId());
+        assertEquals(1L, result.getFirst().getId());
     }
 
     @Test
@@ -165,7 +165,7 @@ class RideScheduleServiceTest {
         List<RideSchedule> result = rideScheduleService.searchRideSchedules(searchCriteria);
 
         assertEquals(1, result.size());
-        assertEquals(1L, result.get(0).getId());
+        assertEquals(1L, result.getFirst().getId());
     }
 
 }
