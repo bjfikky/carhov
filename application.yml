@@ -1,0 +1,24 @@
+gg:
+    jte:
+        developmentMode: true
+
+spring:
+    application:
+        name: @project.name@
+        version: @project.version@
+    datasource:
+        url: jdbc:postgresql://localhost:5432/carhov
+        username: myuser
+        password: mypassword
+        driver-class-name: org.postgresql.Driver
+    jpa:
+        hibernate:
+            ddl-auto: create-drop
+        show-sql: true
+
+app:
+    jwt:
+        # Use a strong secret key in production
+        secret: carhov9753124680SecureSecretKeyForJwtAuthenticationAndAuthorization
+        expirationMs: 3600000      # 1 hour
+        refreshExpirationMs: 86400000   # 24 hours

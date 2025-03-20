@@ -56,24 +56,12 @@ can be found here... [link to be updated]
 
 ---
 
-### Step 3: Configure 
-`application.properties`
-1. Navigate to `src/main/resources/application.properties` or `application.yml`.
-2. Add or verify the following configurations:
-   ```properties
-   # Server settings
-   server.port=8080
+### Step 3: Configure
+1. Start a local postgres db
+```bash
+   make start-db
+```
 
-   # Database settings
-   spring.datasource.url=jdbc:mysql://localhost:3306/<your-database>
-   spring.datasource.username=<your-username>
-   spring.datasource.password=<your-password>
-
-   # Hibernate settings
-   spring.jpa.hibernate.ddl-auto=update
-   spring.jpa.show-sql=true
-
----
 ### Step 4: Build the Application
 
 Using Maven:
