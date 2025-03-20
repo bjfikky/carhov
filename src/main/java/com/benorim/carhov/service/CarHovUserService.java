@@ -14,20 +14,6 @@ import java.util.Optional;
 public class CarHovUserService {
     
     private final CarHovUserRepository carHovUserRepository;
-
-    public CarHovUser createUser(CarHovUser user) {
-        log.info("Creating new user: {}", user);
-        if (user.getDisplayName() == null || user.getDisplayName().isBlank()) {
-            throw new IllegalArgumentException("Display name cannot be null or blank");
-        }
-        if (user.getEmail() == null || user.getEmail().isBlank()) {
-            throw new IllegalArgumentException("Email cannot be null or blank");
-        }
-        if (user.getPassword() == null || user.getPassword().isBlank()) {
-            throw new IllegalArgumentException("Password cannot be null or blank");
-        }
-        return carHovUserRepository.save(user);
-    }
     
     public Optional<CarHovUser> updateUser(Long userId, CarHovUser updatedUser) {
         log.info("Updating user with ID: {}", userId);
