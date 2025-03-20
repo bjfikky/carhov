@@ -14,8 +14,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -54,7 +53,7 @@ public class VehicleServiceTest {
     }
 
     @Test
-    void createRideSchedule_Success() {
+    void createVehicle_Success() {
         when(carHovUserRepository.findById(1L)).thenReturn(Optional.of(user));
         when(vehicleRepository.save(any(Vehicle.class))).thenReturn(vehicle);
 
@@ -63,5 +62,16 @@ public class VehicleServiceTest {
         assertNotNull(result);
         assertEquals(1L, result.getId());
         verify(vehicleRepository, times(1)).save(any(Vehicle.class));
+    }
+
+    @Test
+    void createVehicle_UserNotFound() {
+        when(carHovUserRepository.findById(1L)).thenReturn(Optional.empty());
+
+        Exception exception = assertThrows(IllegalArgumentException.class, () ->
+                vehicleService.createVehicle(createVehicleDTO));
+
+        assertEquals("User not found with ID: 1", exception.getMessage());
+
     }
 }
