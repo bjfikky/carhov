@@ -2,6 +2,7 @@ package com.benorim.carhov.service;
 
 import com.benorim.carhov.dto.vehicle.CreateVehicleDTO;
 import com.benorim.carhov.entity.CarHovUser;
+import com.benorim.carhov.entity.RideSchedule;
 import com.benorim.carhov.entity.Vehicle;
 import com.benorim.carhov.repository.CarHovUserRepository;
 import com.benorim.carhov.repository.VehicleRepository;
@@ -12,6 +13,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -73,5 +76,26 @@ public class VehicleServiceTest {
 
         assertEquals("User not found with ID: 1", exception.getMessage());
 
+    }
+
+    @Test
+    void findVehiclesByUserId() {
+        when(vehicleRepository.findByUserId(1L)).thenReturn(Collections.singletonList(vehicle));
+
+        List<Vehicle> result = vehicleService.findVehicleByUserId(1L);
+
+        assertEquals(1, result.size());
+        assertEquals(1L, result.getFirst().getId());
+    }
+
+    @Test
+    void deleteVehicle_Success() {
+        when(vehicleRepository.findById(1L)).thenReturn(Optional.of(vehicle));
+        doNothing().when(vehicleRepository).delete(vehicle);
+
+        boolean result = vehicleService.deleteVehicle(1L);
+
+        assertTrue(result);
+        verify(vehicleRepository, times(1)).delete(vehicle);
     }
 }

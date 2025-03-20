@@ -40,4 +40,14 @@ public class VehicleService {
         log.info("Finding vehicles for user ID: {}", userId);
         return vehicleRepository.findByUserId(userId);
     }
+
+    public boolean deleteVehicle(Long vehicleId) {
+        log.info("Deleting vehicle with ID: {}", vehicleId);
+        return vehicleRepository.findById(vehicleId)
+                .map(vehicle -> {
+                    vehicleRepository.delete(vehicle);
+                    return true;
+                })
+                .orElse(false);
+    }
 }
