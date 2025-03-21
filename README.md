@@ -111,6 +111,13 @@ Response should look like:
 ```
 
 ---
+### Step 7: Testing the APIs with Swagger
+
+Included in the application is a link to Swagger UI where you can
+test the APIs
+While the service is running locally, visit `http://localhost:8080/swagger-ui/index.html`
+
+---
 
 # Reference Documentation
 
