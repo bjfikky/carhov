@@ -7,6 +7,7 @@ import com.benorim.carhov.dto.auth.SignupRequestDTO;
 import com.benorim.carhov.dto.auth.TokenRefreshRequestDTO;
 import com.benorim.carhov.dto.auth.TokenRefreshResponseDTO;
 import com.benorim.carhov.entity.RefreshToken;
+import com.benorim.carhov.enums.RoleType;
 import com.benorim.carhov.exception.TokenRefreshException;
 import com.benorim.carhov.repository.CarHovUserRepository;
 import com.benorim.carhov.security.jwt.JwtUtils;
@@ -26,6 +27,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @RestController
@@ -67,6 +69,8 @@ public class AuthController {
 
     @PostMapping("/signup")
     public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequestDTO signUpRequest) {
+        // because this is the public signup API, always set role as USER
+        signUpRequest.setRoles(Set.of(RoleType.ROLE_USER.name()));
         if (userRepository.existsByEmail(signUpRequest.getEmail())) {
             return ResponseEntity.badRequest().body(new MessageResponseDTO("Error: Email is already in use!"));
         }
