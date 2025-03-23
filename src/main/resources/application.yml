@@ -22,3 +22,5 @@ app:
         secret: carhov9753124680SecureSecretKeyForJwtAuthenticationAndAuthorization
         expirationMs: 3600000      # 1 hour
         refreshExpirationMs: 86400000   # 24 hours
+    nonce:
+        expirationMs: 86400000   #24 hours
