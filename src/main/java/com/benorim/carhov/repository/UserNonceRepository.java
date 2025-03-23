@@ -1,21 +1,14 @@
 package com.benorim.carhov.repository;
 
-import com.benorim.carhov.entity.CarHovUser;
-import com.benorim.carhov.entity.RefreshToken;
+import com.benorim.carhov.entity.UserNonce;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
-import java.util.Optional;
 
 @Repository
-public interface RefreshTokenRepository extends JpaRepository<RefreshToken, Long> {
-    Optional<RefreshToken> findByToken(String token);
-
+public interface UserNonceRepository extends JpaRepository<UserNonce, Long> {
     @Transactional
     int deleteByExpiryDateBefore(Instant now);
-    
-    @Transactional
-    int deleteByUser(CarHovUser user);
 }
