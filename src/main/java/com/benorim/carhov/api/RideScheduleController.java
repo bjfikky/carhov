@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/ride-schedules")
@@ -53,7 +52,7 @@ public class RideScheduleController {
         log.info("Received request to get all ride schedules");
         List<RideScheduleDTO> rideSchedules = rideScheduleService.findAllRideSchedules().stream()
                 .map(RideScheduleMapper::toDTO)
-                .collect(Collectors.toList());
+                .toList();
         return new ResponseEntity<>(rideSchedules, HttpStatus.OK);
     }
 
@@ -62,7 +61,7 @@ public class RideScheduleController {
         log.info("Received request to get ride schedules for user with ID: {}", userId);
         List<RideScheduleDTO> rideSchedules = rideScheduleService.findRideSchedulesByUserId(userId).stream()
                 .map(RideScheduleMapper::toDTO)
-                .collect(Collectors.toList());
+                .toList();
         return new ResponseEntity<>(rideSchedules, HttpStatus.OK);
     }
 
