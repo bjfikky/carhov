@@ -26,8 +26,22 @@ public class UserAuthorizationAspect {
         Method method = signature.getMethod();
         Object[] args = joinPoint.getArgs();
 
-        // Get the current user
-        UserDetailsImpl currentUser = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        // Get the current authentication
+        if (SecurityContextHolder.getContext().getAuthentication() == null) {
+            log.error("No authentication found");
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+        
+        // Get the principal
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        
+        // Check if principal is UserDetailsImpl
+        if (!(principal instanceof UserDetailsImpl)) {
+            log.error("Principal is not a UserDetailsImpl: {}", principal.getClass().getName());
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+        
+        UserDetailsImpl currentUser = (UserDetailsImpl) principal;
         
         // Find the userId parameter
         Long userId = null;
