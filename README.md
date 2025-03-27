@@ -2,7 +2,6 @@
 
 [![Java](https://img.shields.io/badge/Java-21-orange)](https://www.oracle.com/java/technologies/javase/jdk21-archive-downloads.html)
 [![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.4.1-brightgreen)](https://spring.io/projects/spring-boot)
-[![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
 ## Table of Contents
 - [Overview](#overview)
@@ -19,6 +18,7 @@
 - [Reference Documentation](#reference-documentation)
 
 ## Overview
+**Still a work in progress, but core functionalities added ...**
 
 CarHov is a modern carpooling application designed to bridge the gap between drivers and passengers, making commuting more efficient, cost-effective, and environmentally friendly. The platform allows users to create and join rides effortlessly by leveraging real-time geolocation, secure payment integration, and smart matching algorithms.
 
@@ -48,6 +48,9 @@ This repository contains the backend API and services. The front-end repository 
   - Distance calculation using the Haversine formula
   - Proximity checks for ride search
   - Location validation
+
+- **Ride Booking**
+  - [ _still under development_ ]
 
 ### Security Features
 - Secure password management with encryption
@@ -203,11 +206,10 @@ Expected response:
 ### Coding Standards
 - Follow Java naming conventions
 - Use descriptive names for classes, methods, and variables
-- Document public APIs with JavaDoc comments
 - Apply proper exception handling
 
 ### Git Workflow
-- Create feature branches from `develop`
+- Create feature branches from `main`
 - Use meaningful commit messages
 - Submit PRs for code review before merging
 
@@ -253,10 +255,8 @@ CarHov implements several security measures:
 3. Commit your changes (`git commit -m 'Add amazing feature'`)
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
+6. Wait for my review 
 
-## License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
 
 ## Reference Documentation
 
@@ -269,9 +269,3 @@ For further reference, please consider the following sections:
 * [Spring Security](https://docs.spring.io/spring-boot/3.4.1/reference/web/spring-security.html)
 * [Spring Web](https://docs.spring.io/spring-boot/3.4.1/reference/web/servlet.html)
 
-### Guides
-
-* [Accessing Data with JPA](https://spring.io/guides/gs/accessing-data-jpa/)
-* [Securing a Web Application](https://spring.io/guides/gs/securing-web/)
-* [Spring Boot and OAuth2](https://spring.io/guides/tutorials/spring-boot-oauth2/)
-* [Building REST services with Spring](https://spring.io/guides/tutorials/rest/)
