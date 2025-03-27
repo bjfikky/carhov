@@ -1,108 +1,196 @@
-# CarHov
-CarHov is a modern carpooling application designed to bridge the gap 
-between drivers and passengers, making commuting more efficient, 
-cost-effective, and environmentally friendly. The platform allows 
-users to create and join rides effortlessly by leveraging real-time 
-geolocation, secure payment integration, and smart matching algorithms. 
+# CarHov - Modern Carpooling Platform
 
-Whether you're a driver with empty seats or a passenger looking for a 
-convenient ride, CarHov streamlines the process with an intuitive
-interface and powerful backend services built on Spring Boot. 
-Users can easily search for rides based on their origin, destination, and 
-timing preferences, making daily commuting or intercity travel a seamless experience.
+[![Java](https://img.shields.io/badge/Java-21-orange)](https://www.oracle.com/java/technologies/javase/jdk21-archive-downloads.html)
+[![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.4.1-brightgreen)](https://spring.io/projects/spring-boot)
+[![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
-This repository is strictly for CarHov backend api and services. The front-end
-can be found here... [link to be updated]
+## Table of Contents
+- [Overview](#overview)
+- [Features](#features)
+- [Architecture](#architecture)
+- [Technology Stack](#technology-stack)
+- [API Documentation](#api-documentation)
+- [Setup and Installation](#setup-and-installation)
+- [Development Guidelines](#development-guidelines)
+- [Testing](#testing)
+- [Security](#security)
+- [Contributing](#contributing)
+- [License](#license)
+- [Reference Documentation](#reference-documentation)
 
+## Overview
 
-## Steps to Run CarHov Locally
-### Step 1: Prerequisites
-1. **Install Java Development Kit (JDK):**
-    - Ensure Java 21 is installed.
-    - Verify by running:
-      ```bash
-      java -version
-      ```
+CarHov is a modern carpooling application designed to bridge the gap between drivers and passengers, making commuting more efficient, cost-effective, and environmentally friendly. The platform allows users to create and join rides effortlessly by leveraging real-time geolocation, secure payment integration, and smart matching algorithms.
 
-2. **Install a Build Tool:**
-    - Use either **Maven** or **Gradle**, depending on your project setup.
-    - Verify installation with:
-      ```bash
-      mvn -v   # For Maven
-      gradle -v  # For Gradle
-      ```
+Whether you're a driver with empty seats or a passenger looking for a convenient ride, CarHov streamlines the process with an intuitive interface and powerful backend services built on Spring Boot. Users can easily search for rides based on their origin, destination, and timing preferences, making daily commuting or intercity travel a seamless experience.
 
-3. **Set Up Your IDE:**
-    - Use **IntelliJ IDEA** or another Java IDE.
-    - Install necessary plugins for Spring Boot (e.g., Spring Assistant).
+This repository contains the backend API and services. The front-end repository can be found here [link to be updated].
 
-4. **Database Setup (if required):**
-    - Ensure your database (e.g., MySQL, PostgreSQL) is installed and running.
-    - Create a database for the application and note its connection details.
+## Features
 
----
+### Core Functionality
+- **User Management**
+  - Registration, authentication, and profile management
+  - Role-based access control (User, Admin, Super Admin)
+  - JWT-based authentication with refresh tokens
 
-### Step 2: Import the Project
-1. **Download or Clone the Project:**
-    - If it's hosted on GitHub or another repository, clone it:
-      ```bash
-      git clone <repository-url>
-      cd <project-folder>
-      ```
+- **Ride Management**
+  - Create, update, and delete ride schedules
+  - Recurring ride scheduling (daily, weekly patterns)
+  - Seat availability management
 
-2. **Open the Project in IntelliJ:**
-    - Select "Open or Import" and choose the project folder.
-    - Wait for IntelliJ to index files and download dependencies (if using Maven/Gradle).
+- **Search & Matching**
+  - Geolocation-based ride search with customizable radius
+  - Advanced filtering by departure time and available seats
+  - Matching algorithm based on proximity and schedules
 
----
+- **Geographic Services**
+  - Distance calculation using the Haversine formula
+  - Proximity checks for ride search
+  - Location validation
 
-### Step 3: Configure 
-`application.properties`
-1. Navigate to `src/main/resources/application.properties` or `application.yml`.
-2. Add or verify the following configurations:
-   ```properties
-   # Server settings
-   server.port=8080
+### Security Features
+- Secure password management with encryption
+- HTTPS support for all communications
+- Role-based endpoint protection
+- User ownership validation for profile modifications
+- Aspect-oriented security implementation
 
-   # Database settings
-   spring.datasource.url=jdbc:mysql://localhost:3306/<your-database>
-   spring.datasource.username=<your-username>
-   spring.datasource.password=<your-password>
+## Architecture
 
-   # Hibernate settings
-   spring.jpa.hibernate.ddl-auto=update
-   spring.jpa.show-sql=true
+CarHov follows a layered architecture pattern:
 
----
-### Step 4: Build the Application
+```
+┌───────────────────┐
+│   API Layer       │ ← RESTful controllers and DTOs
+├───────────────────┤
+│   Service Layer   │ ← Business logic and service implementations
+├───────────────────┤
+│   Data Layer      │ ← JPA repositories and entities
+├───────────────────┤
+│   Security Layer  │ ← Authentication, authorization, and security filters
+└───────────────────┘
+```
 
+### Key Components
+- **API Layer**: RESTful controllers, DTOs, and request/response mapping
+- **Service Layer**: Core business logic, validation, and service implementation
+- **Data Layer**: Entities, repositories, and database interactions
+- **Security Layer**: Authentication, authorization, JWT handling, and security aspects
+
+## Technology Stack
+
+- **Backend**
+  - Java 21
+  - Spring Boot 3.4.1
+  - Spring Security with JWT
+  - Spring Data JPA
+  - Hibernate
+  - PostgreSQL / MySQL
+
+- **Build Tools**
+  - Maven
+
+- **Testing**
+  - JUnit 5
+  - Mockito
+  - Testcontainers
+
+- **DevOps & Infrastructure**
+  - Docker
+  - Swagger/OpenAPI for API documentation
+
+## API Documentation
+
+While the application is running, the Swagger UI is available at:
+```
+http://localhost:8080/swagger-ui/index.html
+```
+
+### Key Endpoints
+
+#### Authentication
+- `POST /api/auth/signup` - Register a new user
+- `POST /api/auth/signin` - Authenticate and receive JWT token
+- `POST /api/auth/refreshtoken` - Refresh an existing token
+
+#### User Management
+- `GET /api/users/{userId}` - Get user profile
+- `PUT /api/users/{userId}` - Update user profile (owner only)
+- `DELETE /api/users/{userId}` - Delete user profile (owner only)
+
+#### Admin Operations
+- `GET /api/admin/users` - Get all admin users
+- `POST /api/admin/users/create` - Create admin user
+- `GET /api/admin/users/{id}` - Get admin user by ID
+- `PUT /api/admin/users/{id}` - Update admin user
+- `DELETE /api/admin/users/{id}` - Delete admin user
+
+#### Ride Scheduling
+- `POST /api/rides` - Create a new ride schedule
+- `GET /api/rides/search` - Search for rides based on location and criteria
+- `GET /api/rides/{id}` - Get a specific ride schedule
+- `PUT /api/rides/{id}` - Update a ride schedule
+- `DELETE /api/rides/{id}` - Delete a ride schedule
+
+## Setup and Installation
+
+### Prerequisites
+- Java Development Kit (JDK) 21
+- Maven or Gradle (build tools)
+- MySQL/PostgreSQL database server
+- IDE (IntelliJ IDEA recommended)
+
+### Step 1: Clone the Repository
+```bash
+git clone <repository-url>
+cd carhov
+```
+
+### Step 2: Database Configuration
+Configure your database connection in `src/main/resources/application.properties`:
+
+```properties
+# Database settings
+spring.datasource.url=jdbc:mysql://localhost:3306/carhov_db
+spring.datasource.username=your_username
+spring.datasource.password=your_password
+spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+
+# Hibernate settings
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=true
+spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQL8Dialect
+```
+
+### Step 3: JWT Configuration
+Set up your JWT configuration in the same properties file:
+
+```properties
+# JWT settings
+carhov.app.jwtSecret=your_jwt_secret_key
+carhov.app.jwtExpirationMs=86400000
+carhov.app.jwtRefreshExpirationMs=604800000
+```
+
+### Step 4: Build and Run
 Using Maven:
-Open a terminal in the project folder and run:
-`mvn clean install`
+```bash
+mvn clean install
+mvn spring-boot:run
+```
 
-Fix any build errors before proceeding.
+Using your IDE:
+- Open the project in your IDE
+- Run the `CarhovApplication.java` main class
 
----
-
-### Step 5: Run the Application
-
-Using IntelliJ:
-Locate the main class `CarhovApplication.java`.
-Right-click and select Run.
-
-Using Command Line:
-Navigate to the project folder and run:
-Maven:
-`mvn spring-boot:run`
-
----
-### Step 6: Verify the Application
-
-Open a browser or API testing tool (e.g., Postman).
-Access the version URL:
+### Step 5: Verify Installation
+Once the application is running, access:
+```
 http://localhost:8080/api/version
+```
 
-Response should look like:
+Expected response:
 ```json
 {
     "application": "carhov",
@@ -110,79 +198,80 @@ Response should look like:
 }
 ```
 
----
-### Step 7: Testing the APIs with Swagger
+## Development Guidelines
 
-Included in the application is a link to Swagger UI where you can
-test the APIs
-While the service is running locally, visit `http://localhost:8080/swagger-ui/index.html`
+### Coding Standards
+- Follow Java naming conventions
+- Use descriptive names for classes, methods, and variables
+- Document public APIs with JavaDoc comments
+- Apply proper exception handling
 
----
+### Git Workflow
+- Create feature branches from `develop`
+- Use meaningful commit messages
+- Submit PRs for code review before merging
 
-# Reference Documentation
+### DTO Pattern
+- Use DTOs for all API requests and responses
+- Use mappers to convert between DTOs and entities
+- Validate DTOs at the controller level
+
+## Testing
+
+### Unit Testing
+Unit tests should be written for:
+- Service classes
+- Repository custom methods
+- Utility classes
+- Security components
+
+Example running tests:
+```bash
+mvn test
+```
+
+### Integration Testing
+Integration tests use Testcontainers to spin up databases:
+```bash
+mvn verify
+```
+
+## Security
+
+CarHov implements several security measures:
+
+1. **Authentication**: JWT-based with refresh tokens
+2. **Authorization**: Role-based access control
+3. **Resource Protection**: Aspect-based user ownership validation
+4. **Password Security**: BCrypt password encoding
+5. **Input Validation**: Request validation via annotations
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+## Reference Documentation
 
 For further reference, please consider the following sections:
 
 * [Official Apache Maven documentation](https://maven.apache.org/guides/index.html)
 * [Spring Boot Maven Plugin Reference Guide](https://docs.spring.io/spring-boot/3.4.1/maven-plugin)
-* [Create an OCI image](https://docs.spring.io/spring-boot/3.4.1/maven-plugin/build-image.html)
 * [Spring Boot Testcontainers support](https://docs.spring.io/spring-boot/3.4.1/reference/testing/testcontainers.html#testing.testcontainers)
-* [Testcontainers Postgres Module Reference Guide](https://java.testcontainers.org/modules/databases/postgres/)
 * [Spring Data JPA](https://docs.spring.io/spring-boot/3.4.1/reference/data/sql.html#data.sql.jpa-and-spring-data)
-* [JTE](https://jte.gg/)
-* [OAuth2 Client](https://docs.spring.io/spring-boot/3.4.1/reference/web/spring-security.html#web.security.oauth2.client)
 * [Spring Security](https://docs.spring.io/spring-boot/3.4.1/reference/web/spring-security.html)
-* [Testcontainers](https://java.testcontainers.org/)
 * [Spring Web](https://docs.spring.io/spring-boot/3.4.1/reference/web/servlet.html)
 
 ### Guides
 
-The following guides illustrate how to use some features concretely:
-
 * [Accessing Data with JPA](https://spring.io/guides/gs/accessing-data-jpa/)
 * [Securing a Web Application](https://spring.io/guides/gs/securing-web/)
 * [Spring Boot and OAuth2](https://spring.io/guides/tutorials/spring-boot-oauth2/)
-* [Authenticating a User with LDAP](https://spring.io/guides/gs/authenticating-ldap/)
-* [Building a RESTful Web Service](https://spring.io/guides/gs/rest-service/)
-* [Serving Web Content with Spring MVC](https://spring.io/guides/gs/serving-web-content/)
 * [Building REST services with Spring](https://spring.io/guides/tutorials/rest/)
-
-## JTE
-
-This project has been configured to use [JTE precompiled templates](https://jte.gg/pre-compiling/).
-
-However, to ease development, those are not enabled out of the box.
-For production deployments, you should remove
-
-```properties
-gg.jte.development-mode=true
-```
-
-from the `application.properties` file and set
-
-```properties
-gg.jte.use-precompiled-templates=true
-```
-
-instead.
-For more details, please take a look at [the official documentation](https://jte.gg/spring-boot-starter-3/).
-
-### Testcontainers support
-
-This project
-uses [Testcontainers at development time](https://docs.spring.io/spring-boot/3.4.1/reference/features/dev-services.html#features.dev-services.testcontainers).
-
-Testcontainers has been configured to use the following Docker images:
-
-* [`postgres:latest`](https://hub.docker.com/_/postgres)
-
-Please review the tags of the used images and set them to the same as you're running in production.
-
-### Maven Parent overrides
-
-Due to Maven's design, elements are inherited from the parent POM to the project POM.
-While most of the inheritance is fine, it also inherits unwanted elements like `<license>` and `<developers>` from the
-parent.
-To prevent this, the project POM contains empty overrides for these elements.
-If you manually switch to a different parent and actually want the inheritance, you need to remove those overrides.
-
