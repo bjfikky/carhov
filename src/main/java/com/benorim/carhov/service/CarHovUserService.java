@@ -3,7 +3,7 @@ package com.benorim.carhov.service;
 import com.benorim.carhov.entity.CarHovUser;
 import com.benorim.carhov.enums.RoleType;
 import com.benorim.carhov.repository.CarHovUserRepository;
-import com.benorim.carhov.repository.RoleRepository;
+import com.benorim.carhov.repository.RefreshTokenRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -17,7 +17,7 @@ import java.util.Optional;
 public class CarHovUserService {
     
     private final CarHovUserRepository carHovUserRepository;
-    private final RoleRepository roleRepository;
+    private final RefreshTokenRepository refreshTokenRepository;
 
     public CarHovUser createUser(CarHovUser user) {
         log.info("Creating new user: {}", user);
@@ -66,6 +66,7 @@ public class CarHovUserService {
         log.info("Deleting user with ID: {}", userId);
         return carHovUserRepository.findById(userId)
                 .map(user -> {
+                    refreshTokenRepository.deleteByUser(user);
                     carHovUserRepository.delete(user);
                     return true;
                 })
