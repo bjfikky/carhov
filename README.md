@@ -201,6 +201,12 @@ Expected response:
 }
 ```
 
+### Step 6: Run Tests
+Using Maven, while docker desktop is also running on your computer:
+```bash
+mvn clean test
+```
+
 ## Development Guidelines
 
 ### Coding Standards
