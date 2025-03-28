@@ -65,21 +65,21 @@ CarHov follows a layered architecture pattern:
 
 ```
 ┌───────────────────┐
+│   Security Layer  │ ← Authentication, authorization, and security filters
+├───────────────────┤
 │   API Layer       │ ← RESTful controllers and DTOs
 ├───────────────────┤
-│   Service Layer   │ ← Business logic and service implementations
+│   Business Layer  │ ← Business logic and service implementations
 ├───────────────────┤
 │   Data Layer      │ ← JPA repositories and entities
-├───────────────────┤
-│   Security Layer  │ ← Authentication, authorization, and security filters
 └───────────────────┘
 ```
 
 ### Key Components
+- **Security Layer**: Authentication, authorization, JWT handling, and security aspects
 - **API Layer**: RESTful controllers, DTOs, and request/response mapping
 - **Service Layer**: Core business logic, validation, and service implementation
 - **Data Layer**: Entities, repositories, and database interactions
-- **Security Layer**: Authentication, authorization, JWT handling, and security aspects
 
 ## Technology Stack
 
