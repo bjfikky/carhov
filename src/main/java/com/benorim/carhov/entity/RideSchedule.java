@@ -64,6 +64,10 @@ public class RideSchedule {
 
     private boolean available;
 
+    @ManyToOne
+    @JoinColumn(name = "vehicle_id")
+    private Vehicle vehicle;
+
     @Setter(AccessLevel.NONE)
     @CreationTimestamp
     @Column(nullable = false, updatable = false)
