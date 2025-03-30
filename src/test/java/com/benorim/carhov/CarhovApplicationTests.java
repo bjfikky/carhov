@@ -10,6 +10,7 @@ class CarhovApplicationTests {
 
     @Test
     void contextLoads() {
+        // Tests that the application context loads successfully
     }
 
 }

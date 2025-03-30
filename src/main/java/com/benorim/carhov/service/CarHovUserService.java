@@ -6,6 +6,7 @@ import com.benorim.carhov.repository.CarHovUserRepository;
 import com.benorim.carhov.repository.RefreshTokenRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,6 +19,7 @@ public class CarHovUserService {
     
     private final CarHovUserRepository carHovUserRepository;
     private final RefreshTokenRepository refreshTokenRepository;
+    private final PasswordEncoder encoder;
 
     public CarHovUser createUser(CarHovUser user) {
         log.info("Creating new user: {}", user);
@@ -47,7 +49,7 @@ public class CarHovUserService {
                         existingUser.setPhone(updatedUser.getPhone());
                     }
                     if (updatedUser.getPassword() != null) {
-                        existingUser.setPassword(updatedUser.getPassword());
+                        existingUser.setPassword(encoder.encode(updatedUser.getPassword()));
                     }
                     existingUser.setEnabled(updatedUser.isEnabled());
                     existingUser.setAccountNonLocked(updatedUser.isAccountNonLocked());

@@ -14,6 +14,9 @@ public class CreateRideScheduleDTO {
     
     @NotNull(message = "User ID is required")
     private Long userId;
+
+    @NotNull(message = "Vehicle ID is required")
+    private Long vehicleId;
     
     @NotNull(message = "Start latitude is required")
     private Double startLatitude;

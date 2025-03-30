@@ -136,6 +136,14 @@ http://localhost:8080/swagger-ui/index.html
 - `PUT /api/rides/{id}` - Update a ride schedule
 - `DELETE /api/rides/{id}` - Delete a ride schedule
 
+#### Vehicle Management
+- `POST /api/vehicles` - Create a new vehicle
+- `PUT /api/vehicles/{vehicleid}` - Update a vehicle. Just the color
+- `DELETE /api/vehicles/{id}` - Delete a vehicle
+
+#### Version
+- `GET /api/version` - Get current application version
+
 ## Setup and Installation
 
 ### Prerequisites
@@ -199,6 +207,12 @@ Expected response:
     "application": "carhov",
     "version": "0.0.1-SNAPSHOT"
 }
+```
+
+### Step 6: Run Tests
+Using Maven, while docker desktop is also running on your computer:
+```bash
+mvn clean test
 ```
 
 ## Development Guidelines

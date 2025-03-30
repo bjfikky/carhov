@@ -5,16 +5,18 @@ import com.benorim.carhov.dto.rideSchedule.RideScheduleDTO;
 import com.benorim.carhov.dto.rideSchedule.RideScheduleSearchResultDTO;
 import com.benorim.carhov.dto.rideSchedule.SearchRideScheduleDTO;
 import com.benorim.carhov.dto.rideSchedule.UpdateRideScheduleDTO;
-import com.benorim.carhov.util.GeoUtils;
 import com.benorim.carhov.entity.CarHovUser;
 import com.benorim.carhov.entity.RideSchedule;
+import com.benorim.carhov.entity.Vehicle;
+import com.benorim.carhov.util.GeoUtils;
 
 public class RideScheduleMapper {
 
-    public static RideSchedule toEntity(CreateRideScheduleDTO dto, CarHovUser user) {
+    public static RideSchedule toEntity(CreateRideScheduleDTO dto, CarHovUser user, Vehicle vehicle) {
         RideSchedule rideSchedule = new RideSchedule();
         
         rideSchedule.setUser(user);
+        rideSchedule.setVehicle(vehicle);
         rideSchedule.setStartLatitude(dto.getStartLatitude());
         rideSchedule.setStartLongitude(dto.getStartLongitude());
         rideSchedule.setEndLatitude(dto.getEndLatitude());
@@ -59,25 +61,26 @@ public class RideScheduleMapper {
     }
     
     public static RideScheduleDTO toDTO(RideSchedule rideSchedule) {
-        RideScheduleDTO dto = new RideScheduleDTO();
-        
-        dto.setId(rideSchedule.getId());
-        dto.setUserId(rideSchedule.getUser().getId());
-        dto.setUserDisplayName(rideSchedule.getUser().getDisplayName());
-        dto.setStartLatitude(rideSchedule.getStartLatitude());
-        dto.setStartLongitude(rideSchedule.getStartLongitude());
-        dto.setEndLatitude(rideSchedule.getEndLatitude());
-        dto.setEndLongitude(rideSchedule.getEndLongitude());
-        dto.setDayList(rideSchedule.getDayList());
-        dto.setDepartureTime(rideSchedule.getDepartureTime());
-        dto.setAvailableSeats(rideSchedule.getAvailableSeats());
-        dto.setAvailable(rideSchedule.isAvailable());
-        dto.setCreatedAt(rideSchedule.getCreatedAt());
-        dto.setUpdatedAt(rideSchedule.getUpdatedAt());
-        
-        return dto;
+        RideScheduleDTO rideScheduleDTO = new RideScheduleDTO();
+
+        rideScheduleDTO.setId(rideSchedule.getId());
+        rideScheduleDTO.setUserId(rideSchedule.getUser().getId());
+        rideScheduleDTO.setVehicleId(rideSchedule.getVehicle().getId());
+        rideScheduleDTO.setUserDisplayName(rideSchedule.getUser().getDisplayName());
+        rideScheduleDTO.setStartLatitude(rideSchedule.getStartLatitude());
+        rideScheduleDTO.setStartLongitude(rideSchedule.getStartLongitude());
+        rideScheduleDTO.setEndLatitude(rideSchedule.getEndLatitude());
+        rideScheduleDTO.setEndLongitude(rideSchedule.getEndLongitude());
+        rideScheduleDTO.setDayList(rideSchedule.getDayList());
+        rideScheduleDTO.setDepartureTime(rideSchedule.getDepartureTime());
+        rideScheduleDTO.setAvailableSeats(rideSchedule.getAvailableSeats());
+        rideScheduleDTO.setAvailable(rideSchedule.isAvailable());
+        rideScheduleDTO.setCreatedAt(rideSchedule.getCreatedAt());
+        rideScheduleDTO.setUpdatedAt(rideSchedule.getUpdatedAt());
+
+        return rideScheduleDTO;
     }
-    
+
     /**
      * Convert a RideSchedule to a RideScheduleSearchResultDTO including distance information
      *
@@ -86,22 +89,22 @@ public class RideScheduleMapper {
      * @return RideScheduleSearchResultDTO with distance information
      */
     public static RideScheduleSearchResultDTO toSearchResultDTO(RideSchedule rideSchedule, SearchRideScheduleDTO searchCriteria) {
-        RideScheduleSearchResultDTO dto = new RideScheduleSearchResultDTO();
-        
-        // Copy all the basic fields
-        dto.setId(rideSchedule.getId());
-        dto.setUserId(rideSchedule.getUser().getId());
-        dto.setUserDisplayName(rideSchedule.getUser().getDisplayName());
-        dto.setStartLatitude(rideSchedule.getStartLatitude());
-        dto.setStartLongitude(rideSchedule.getStartLongitude());
-        dto.setEndLatitude(rideSchedule.getEndLatitude());
-        dto.setEndLongitude(rideSchedule.getEndLongitude());
-        dto.setDayList(rideSchedule.getDayList());
-        dto.setDepartureTime(rideSchedule.getDepartureTime());
-        dto.setAvailableSeats(rideSchedule.getAvailableSeats());
-        dto.setAvailable(rideSchedule.isAvailable());
-        dto.setCreatedAt(rideSchedule.getCreatedAt());
-        dto.setUpdatedAt(rideSchedule.getUpdatedAt());
+        RideScheduleSearchResultDTO rideScheduleSearchResultDTO = new RideScheduleSearchResultDTO();
+
+        rideScheduleSearchResultDTO.setId(rideSchedule.getId());
+        rideScheduleSearchResultDTO.setUserId(rideSchedule.getUser().getId());
+        rideScheduleSearchResultDTO.setVehicleId(rideSchedule.getVehicle().getId());
+        rideScheduleSearchResultDTO.setUserDisplayName(rideSchedule.getUser().getDisplayName());
+        rideScheduleSearchResultDTO.setStartLatitude(rideSchedule.getStartLatitude());
+        rideScheduleSearchResultDTO.setStartLongitude(rideSchedule.getStartLongitude());
+        rideScheduleSearchResultDTO.setEndLatitude(rideSchedule.getEndLatitude());
+        rideScheduleSearchResultDTO.setEndLongitude(rideSchedule.getEndLongitude());
+        rideScheduleSearchResultDTO.setDayList(rideSchedule.getDayList());
+        rideScheduleSearchResultDTO.setDepartureTime(rideSchedule.getDepartureTime());
+        rideScheduleSearchResultDTO.setAvailableSeats(rideSchedule.getAvailableSeats());
+        rideScheduleSearchResultDTO.setAvailable(rideSchedule.isAvailable());
+        rideScheduleSearchResultDTO.setCreatedAt(rideSchedule.getCreatedAt());
+        rideScheduleSearchResultDTO.setUpdatedAt(rideSchedule.getUpdatedAt());
         
         // Calculate and set distance information
         double startPointDistance = GeoUtils.calculateDistanceInMiles(
@@ -114,10 +117,10 @@ public class RideScheduleMapper {
                 rideSchedule.getEndLatitude(), rideSchedule.getEndLongitude()
         );
         
-        dto.setStartPointDistanceInMiles(startPointDistance);
-        dto.setEndPointDistanceInMiles(endPointDistance);
-        dto.setTotalDistanceInMiles(startPointDistance + endPointDistance);
+        rideScheduleSearchResultDTO.setStartPointDistanceInMiles(startPointDistance);
+        rideScheduleSearchResultDTO.setEndPointDistanceInMiles(endPointDistance);
+        rideScheduleSearchResultDTO.setTotalDistanceInMiles(startPointDistance + endPointDistance);
         
-        return dto;
+        return rideScheduleSearchResultDTO;
     }
 }

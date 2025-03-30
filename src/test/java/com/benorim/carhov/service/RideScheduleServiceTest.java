@@ -4,9 +4,11 @@ import com.benorim.carhov.dto.rideSchedule.CreateRideScheduleDTO;
 import com.benorim.carhov.dto.rideSchedule.SearchRideScheduleDTO;
 import com.benorim.carhov.entity.CarHovUser;
 import com.benorim.carhov.entity.RideSchedule;
+import com.benorim.carhov.entity.Vehicle;
 import com.benorim.carhov.enums.DayOfWeek;
 import com.benorim.carhov.repository.CarHovUserRepository;
 import com.benorim.carhov.repository.RideScheduleRepository;
+import com.benorim.carhov.repository.VehicleRepository;
 import com.benorim.carhov.util.GeoUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -41,6 +43,9 @@ class RideScheduleServiceTest {
     @Mock
     private CarHovUserRepository carHovUserRepository;
 
+    @Mock
+    private VehicleRepository vehicleRepository;
+
     @InjectMocks
     private RideScheduleService rideScheduleService;
 
@@ -59,6 +64,7 @@ class RideScheduleServiceTest {
 
         createRideScheduleDTO = new CreateRideScheduleDTO();
         createRideScheduleDTO.setUserId(1L);
+        createRideScheduleDTO.setVehicleId(1L);
         createRideScheduleDTO.setStartLatitude(1234.0);
         createRideScheduleDTO.setStartLongitude(-1234.0);
         createRideScheduleDTO.setEndLatitude(4321.0);
@@ -72,6 +78,7 @@ class RideScheduleServiceTest {
     void createRideSchedule_Success() {
         when(carHovUserRepository.findById(1L)).thenReturn(Optional.of(user));
         when(rideScheduleRepository.save(any(RideSchedule.class))).thenReturn(rideSchedule);
+        when(vehicleRepository.findById(1L)).thenReturn(Optional.of(new Vehicle()));
 
         RideSchedule result = rideScheduleService.createRideSchedule(createRideScheduleDTO);
 

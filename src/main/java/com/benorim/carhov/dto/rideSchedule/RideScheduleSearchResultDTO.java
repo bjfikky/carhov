@@ -11,6 +11,7 @@ import java.util.List;
 public class RideScheduleSearchResultDTO {
     private Long id;
     private Long userId;
+    private Long vehicleId;
     private String userDisplayName;
     private Double startLatitude;
     private Double startLongitude;
