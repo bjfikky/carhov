@@ -4,10 +4,13 @@ import com.benorim.carhov.dto.auth.SignupRequestDTO;
 import com.benorim.carhov.entity.CarHovUser;
 import com.benorim.carhov.entity.Role;
 import com.benorim.carhov.enums.RoleType;
+import com.benorim.carhov.exception.DataOwnershipException;
 import com.benorim.carhov.repository.CarHovUserRepository;
 import com.benorim.carhov.repository.RoleRepository;
+import com.benorim.carhov.security.services.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -63,5 +66,24 @@ public class AuthService {
 
         user.setRoles(roles);
         userRepository.save(user);
+    }
+
+    public Long getSignedInUserId() {
+        // Get the current authentication
+        if (SecurityContextHolder.getContext().getAuthentication() == null) {
+            log.error("No authentication found");
+            throw new DataOwnershipException("No authentication found");
+        }
+
+        // Get the principal
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        // Check if principal is UserDetailsImpl
+        if (!(principal instanceof UserDetailsImpl currentUser)) {
+            log.error("Principal is not a UserDetailsImpl: {}", principal.getClass().getName());
+            throw new DataOwnershipException("Principal is not a UserDetailsImpl");
+        }
+
+        return currentUser.getId();
     }
 }
