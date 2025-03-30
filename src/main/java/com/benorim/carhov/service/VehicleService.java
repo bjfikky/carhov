@@ -5,6 +5,7 @@ import com.benorim.carhov.dto.vehicle.UpdateVehicleDTO;
 import com.benorim.carhov.entity.CarHovUser;
 import com.benorim.carhov.entity.Vehicle;
 import com.benorim.carhov.exception.DataOwnershipException;
+import com.benorim.carhov.mapper.VehicleMapper;
 import com.benorim.carhov.repository.CarHovUserRepository;
 import com.benorim.carhov.repository.VehicleRepository;
 import lombok.RequiredArgsConstructor;
@@ -29,15 +30,9 @@ public class VehicleService {
         CarHovUser user = carHovUserRepository.findById(createVehicleDTO.getUserId())
                 .orElseThrow(() -> new IllegalArgumentException("User not found with ID: " + createVehicleDTO.getUserId()));
 
-        doesVehicleBelongToLoggedInUSer(user);
+        doesVehicleBelongToLoggedInUser(user);
 
-        Vehicle vehicle = new Vehicle();
-        vehicle.setUser(user);
-        vehicle.setMake(createVehicleDTO.getMake());
-        vehicle.setModel(createVehicleDTO.getModel());
-        vehicle.setPassengerCapacity(createVehicleDTO.getCapacity());
-        vehicle.setColor(createVehicleDTO.getColor());
-        vehicle.setLicensePlate(createVehicleDTO.getLicensePlate());
+        Vehicle vehicle = VehicleMapper.toEntity(createVehicleDTO, user);
 
         return vehicleRepository.save(vehicle);
     }
@@ -47,7 +42,7 @@ public class VehicleService {
         Vehicle vehicle = vehicleRepository.findById(vehicleId)
                 .orElseThrow(() -> new IllegalArgumentException("Vehicle not found with ID: " + vehicleId));
 
-        doesVehicleBelongToLoggedInUSer(vehicle.getUser());
+        doesVehicleBelongToLoggedInUser(vehicle.getUser());
 
         // color is the only thing that could change on the vehicle
         // delete and add a new vehicle if a user purchases a new vehicle
@@ -57,23 +52,38 @@ public class VehicleService {
         return vehicleRepository.save(vehicle);
     }
 
-    public List<Vehicle> findVehicleByUserId(Long userId) {
-        log.info("Finding vehicles for user ID: {}", userId);
-        return vehicleRepository.findByUserId(userId);
-    }
-
     public boolean deleteVehicle(Long vehicleId) {
         log.info("Deleting vehicle with ID: {}", vehicleId);
         return vehicleRepository.findById(vehicleId)
                 .map(vehicle -> {
-                    doesVehicleBelongToLoggedInUSer(vehicle.getUser());
+                    doesVehicleBelongToLoggedInUser(vehicle.getUser());
                     vehicleRepository.delete(vehicle);
                     return true;
                 })
                 .orElse(false);
     }
 
-    private void doesVehicleBelongToLoggedInUSer(CarHovUser user) {
+    public Vehicle findVehicleById(Long vehicleId) {
+        log.info("Finding vehicle with ID: {}", vehicleId);
+        Vehicle vehicle = vehicleRepository.findById(vehicleId)
+                .orElseThrow(() -> new IllegalArgumentException("Vehicle not found with ID: " + vehicleId));
+
+        // TODO: An admin should be able to use this method too. Add an || isAdminUser
+        doesVehicleBelongToLoggedInUser(vehicle.getUser());
+
+        return vehicle;
+    }
+
+    public List<Vehicle> findVehiclesByUserId(Long userId) {
+        log.info("Finding all vehicles for user ID: {}", userId);
+        CarHovUser user = carHovUserRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found with ID: " + userId));
+        List<Vehicle> vehicles = vehicleRepository.findByUserId(userId);
+        doesVehicleBelongToLoggedInUser(user);
+        return vehicles;
+    }
+
+    private void doesVehicleBelongToLoggedInUser(CarHovUser user) {
         if (user == null) {
             throw new DataOwnershipException("User not found");
         }
