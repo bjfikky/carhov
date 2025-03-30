@@ -2,8 +2,8 @@ package com.benorim.carhov.service;
 
 import com.benorim.carhov.dto.vehicle.CreateVehicleDTO;
 import com.benorim.carhov.entity.CarHovUser;
-import com.benorim.carhov.entity.RideSchedule;
 import com.benorim.carhov.entity.Vehicle;
+import com.benorim.carhov.exception.DataOwnershipException;
 import com.benorim.carhov.repository.CarHovUserRepository;
 import com.benorim.carhov.repository.VehicleRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,9 +17,15 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class VehicleServiceTest {
@@ -29,6 +35,9 @@ public class VehicleServiceTest {
     
     @Mock
     private CarHovUserRepository carHovUserRepository;
+
+    @Mock
+    private AuthService authService;
 
     @InjectMocks
     private VehicleService vehicleService;
@@ -59,12 +68,34 @@ public class VehicleServiceTest {
     void createVehicle_Success() {
         when(carHovUserRepository.findById(1L)).thenReturn(Optional.of(user));
         when(vehicleRepository.save(any(Vehicle.class))).thenReturn(vehicle);
-
+        when(authService.getSignedInUserId()).thenReturn(1L);
         Vehicle result = vehicleService.createVehicle(createVehicleDTO);
 
         assertNotNull(result);
         assertEquals(1L, result.getId());
         verify(vehicleRepository, times(1)).save(any(Vehicle.class));
+    }
+
+    @Test
+    void createVehicle_UserTriesToCreateVehicleForAnotherUser() {
+        when(carHovUserRepository.findById(1L)).thenReturn(Optional.of(user));
+        when(authService.getSignedInUserId()).thenReturn(50L);
+
+        Exception exception = assertThrows(DataOwnershipException.class, () ->
+                vehicleService.createVehicle(createVehicleDTO));
+
+        assertEquals("User id mismatch", exception.getMessage());
+    }
+
+    @Test
+    void createVehicle_UserIsNotSignedIn() {
+        when(carHovUserRepository.findById(1L)).thenReturn(Optional.of(user));
+        when(authService.getSignedInUserId()).thenReturn(null);
+
+        Exception exception = assertThrows(DataOwnershipException.class, () ->
+                vehicleService.createVehicle(createVehicleDTO));
+
+        assertEquals("User is not signed in", exception.getMessage());
     }
 
     @Test
@@ -75,14 +106,15 @@ public class VehicleServiceTest {
                 vehicleService.createVehicle(createVehicleDTO));
 
         assertEquals("User not found with ID: 1", exception.getMessage());
-
     }
 
     @Test
     void findVehiclesByUserId() {
         when(vehicleRepository.findByUserId(1L)).thenReturn(Collections.singletonList(vehicle));
+        when(authService.getSignedInUserId()).thenReturn(1L);
+        when(carHovUserRepository.findById(1L)).thenReturn(Optional.of(user));
 
-        List<Vehicle> result = vehicleService.findVehicleByUserId(1L);
+        List<Vehicle> result = vehicleService.findVehiclesByUserId(1L);
 
         assertEquals(1, result.size());
         assertEquals(1L, result.getFirst().getId());
@@ -92,10 +124,22 @@ public class VehicleServiceTest {
     void deleteVehicle_Success() {
         when(vehicleRepository.findById(1L)).thenReturn(Optional.of(vehicle));
         doNothing().when(vehicleRepository).delete(vehicle);
+        when(authService.getSignedInUserId()).thenReturn(1L);
 
         boolean result = vehicleService.deleteVehicle(1L);
 
         assertTrue(result);
         verify(vehicleRepository, times(1)).delete(vehicle);
+    }
+
+    @Test
+    void deleteVehicle_UserTriesToDeleteVehicleForAnotherUser() {
+        when(vehicleRepository.findById(1L)).thenReturn(Optional.of(vehicle));
+        when(authService.getSignedInUserId()).thenReturn(50L);
+
+        Exception exception = assertThrows(DataOwnershipException.class, () ->
+                vehicleService.deleteVehicle(vehicle.getId()));
+
+        assertEquals("User id mismatch", exception.getMessage());
     }
 }
