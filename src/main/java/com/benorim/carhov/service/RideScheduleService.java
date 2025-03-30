@@ -5,9 +5,11 @@ import com.benorim.carhov.dto.rideSchedule.RideScheduleSearchResultDTO;
 import com.benorim.carhov.dto.rideSchedule.SearchRideScheduleDTO;
 import com.benorim.carhov.entity.CarHovUser;
 import com.benorim.carhov.entity.RideSchedule;
+import com.benorim.carhov.entity.Vehicle;
 import com.benorim.carhov.mapper.RideScheduleMapper;
 import com.benorim.carhov.repository.CarHovUserRepository;
 import com.benorim.carhov.repository.RideScheduleRepository;
+import com.benorim.carhov.repository.VehicleRepository;
 import com.benorim.carhov.util.GeoUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,6 +26,7 @@ public class RideScheduleService {
 
     private final RideScheduleRepository rideScheduleRepository;
     private final CarHovUserRepository carHovUserRepository;
+    private final VehicleRepository vehicleRepository;
 
     public RideSchedule createRideSchedule(CreateRideScheduleDTO createRideScheduleDTO) {
         log.info("Creating new ride schedule for user ID: {}", createRideScheduleDTO.getUserId());
@@ -31,16 +34,10 @@ public class RideScheduleService {
         CarHovUser user = carHovUserRepository.findById(createRideScheduleDTO.getUserId())
                 .orElseThrow(() -> new IllegalArgumentException("User not found with ID: " + createRideScheduleDTO.getUserId()));
 
-        RideSchedule rideSchedule = new RideSchedule();
-        rideSchedule.setUser(user);
-        rideSchedule.setStartLatitude(createRideScheduleDTO.getStartLatitude());
-        rideSchedule.setStartLongitude(createRideScheduleDTO.getStartLongitude());
-        rideSchedule.setEndLatitude(createRideScheduleDTO.getEndLatitude());
-        rideSchedule.setEndLongitude(createRideScheduleDTO.getEndLongitude());
-        rideSchedule.setDayList(createRideScheduleDTO.getDayList());
-        rideSchedule.setDepartureTime(createRideScheduleDTO.getDepartureTime());
-        rideSchedule.setAvailableSeats(createRideScheduleDTO.getAvailableSeats());
-        rideSchedule.setAvailable(createRideScheduleDTO.getAvailable());
+        Vehicle vehicle = vehicleRepository.findById(createRideScheduleDTO.getVehicleId())
+                .orElseThrow(() -> new IllegalArgumentException("Vehicle not found with ID: " + createRideScheduleDTO.getVehicleId()));
+
+        RideSchedule rideSchedule = RideScheduleMapper.toEntity(createRideScheduleDTO, user, vehicle);
         
         return rideScheduleRepository.save(rideSchedule);
     }
@@ -118,6 +115,7 @@ public class RideScheduleService {
                 searchCriteria.getRadiusInMiles());
         
         // Get all available ride schedules
+        // TODO: Optimization, we probably don't want to get all available rides all over the country
         List<RideSchedule> allRideSchedules = rideScheduleRepository.findByAvailableTrue();
         
         // Filter ride schedules based on proximity to start and end points
