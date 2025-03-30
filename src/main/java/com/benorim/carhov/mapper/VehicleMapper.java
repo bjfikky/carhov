@@ -3,7 +3,7 @@ package com.benorim.carhov.mapper;
 import com.benorim.carhov.dto.vehicle.VehicleDTO;
 import com.benorim.carhov.entity.Vehicle;
 
-public class CreateVehicleMapper {
+public class VehicleMapper {
 
     public static VehicleDTO toDTO(Vehicle vehicle) {
         VehicleDTO dto = new VehicleDTO();
