@@ -68,7 +68,7 @@ public class AuthService {
         userRepository.save(user);
     }
 
-    public Long getSignedInUserId() {
+    private Long getSignedInUserId() {
         // Get the current authentication
         if (SecurityContextHolder.getContext().getAuthentication() == null) {
             log.error("No authentication found");
@@ -85,5 +85,22 @@ public class AuthService {
         }
 
         return currentUser.getId();
+    }
+
+    public boolean isRequestMadeByLoggedInUser(CarHovUser user) {
+        if (user == null) {
+            throw new DataOwnershipException("User not found");
+        }
+        Long signedInUserId = getSignedInUserId();
+        if (signedInUserId == null) {
+            log.error("User is not signed in");
+            throw new DataOwnershipException("User is not signed in");
+        }
+
+        if (!signedInUserId.equals(user.getId())) {
+            log.error("User id mismatch");
+            throw new DataOwnershipException("User id mismatch");
+        }
+        return true;
     }
 }
