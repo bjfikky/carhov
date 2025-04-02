@@ -68,7 +68,7 @@ public class VehicleServiceTest {
     void createVehicle_Success() {
         when(carHovUserRepository.findById(1L)).thenReturn(Optional.of(user));
         when(vehicleRepository.save(any(Vehicle.class))).thenReturn(vehicle);
-        when(authService.getSignedInUserId()).thenReturn(1L);
+        when(authService.isRequestMadeByLoggedInUser(user)).thenReturn(true);
         Vehicle result = vehicleService.createVehicle(createVehicleDTO);
 
         assertNotNull(result);
@@ -79,7 +79,8 @@ public class VehicleServiceTest {
     @Test
     void createVehicle_UserTriesToCreateVehicleForAnotherUser() {
         when(carHovUserRepository.findById(1L)).thenReturn(Optional.of(user));
-        when(authService.getSignedInUserId()).thenReturn(50L);
+        when(authService.isRequestMadeByLoggedInUser(user))
+                .thenThrow(new DataOwnershipException("User id mismatch"));
 
         Exception exception = assertThrows(DataOwnershipException.class, () ->
                 vehicleService.createVehicle(createVehicleDTO));
@@ -90,7 +91,8 @@ public class VehicleServiceTest {
     @Test
     void createVehicle_UserIsNotSignedIn() {
         when(carHovUserRepository.findById(1L)).thenReturn(Optional.of(user));
-        when(authService.getSignedInUserId()).thenReturn(null);
+        when(authService.isRequestMadeByLoggedInUser(user))
+                .thenThrow(new DataOwnershipException("User is not signed in"));
 
         Exception exception = assertThrows(DataOwnershipException.class, () ->
                 vehicleService.createVehicle(createVehicleDTO));
@@ -111,7 +113,7 @@ public class VehicleServiceTest {
     @Test
     void findVehiclesByUserId() {
         when(vehicleRepository.findByUserId(1L)).thenReturn(Collections.singletonList(vehicle));
-        when(authService.getSignedInUserId()).thenReturn(1L);
+        when(authService.isRequestMadeByLoggedInUser(user)).thenReturn(true);
         when(carHovUserRepository.findById(1L)).thenReturn(Optional.of(user));
 
         List<Vehicle> result = vehicleService.findVehiclesByUserId(1L);
@@ -124,7 +126,7 @@ public class VehicleServiceTest {
     void deleteVehicle_Success() {
         when(vehicleRepository.findById(1L)).thenReturn(Optional.of(vehicle));
         doNothing().when(vehicleRepository).delete(vehicle);
-        when(authService.getSignedInUserId()).thenReturn(1L);
+        when(authService.isRequestMadeByLoggedInUser(user)).thenReturn(true);
 
         boolean result = vehicleService.deleteVehicle(1L);
 
@@ -135,7 +137,8 @@ public class VehicleServiceTest {
     @Test
     void deleteVehicle_UserTriesToDeleteVehicleForAnotherUser() {
         when(vehicleRepository.findById(1L)).thenReturn(Optional.of(vehicle));
-        when(authService.getSignedInUserId()).thenReturn(50L);
+        when(authService.isRequestMadeByLoggedInUser(any(CarHovUser.class)))
+                .thenThrow(new DataOwnershipException("User id mismatch"));
 
         Exception exception = assertThrows(DataOwnershipException.class, () ->
                 vehicleService.deleteVehicle(vehicle.getId()));
