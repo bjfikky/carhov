@@ -24,6 +24,9 @@ public class CreateVehicleDTO {
     @NotNull(message = "Color is required")
     private String color;
 
+    @NotNull(message = "Year is required")
+    private Integer year;
+
     @NotNull(message = "Capacity is required")
     private int capacity;
 }
