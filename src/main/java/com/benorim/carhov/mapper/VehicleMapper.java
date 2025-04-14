@@ -27,6 +27,7 @@ public class VehicleMapper {
                 .make(dto.getMake())
                 .model(dto.getModel())
                 .user(user)
+                .year(dto.getYear())
                 .passengerCapacity(dto.getCapacity())
                 .color(dto.getColor())
                 .licensePlate(dto.getLicensePlate())
