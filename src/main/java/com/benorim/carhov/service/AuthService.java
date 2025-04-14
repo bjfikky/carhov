@@ -68,7 +68,7 @@ public class AuthService {
         userRepository.save(user);
     }
 
-    private Long getSignedInUserId() {
+    public Long getSignedInUserId() {
         // Get the current authentication
         if (SecurityContextHolder.getContext().getAuthentication() == null) {
             log.error("No authentication found");
