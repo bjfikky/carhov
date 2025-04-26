@@ -58,7 +58,7 @@ public class VehicleController {
         return new ResponseEntity<>(VehicleMapper.toDTO(vehicle), HttpStatus.OK);
     }
 
-    @GetMapping("{userId}")
+    @GetMapping("/user/{userId}")
     public ResponseEntity<List<VehicleDTO>> getVehiclesByUserId(@PathVariable Long userId) {
         log.info("Received request to get vehicles by user: {}", userId);
         List<Vehicle> vehicles = vehicleService.findVehiclesByUserId(userId);
