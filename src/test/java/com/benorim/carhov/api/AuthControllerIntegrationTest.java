@@ -1,5 +1,6 @@
 package com.benorim.carhov.api;
 
+import com.benorim.carhov.config.TestContainerConfig;
 import com.benorim.carhov.dto.auth.JwtResponseDTO;
 import com.benorim.carhov.dto.auth.LoginRequestDTO;
 import com.benorim.carhov.dto.auth.MessageResponseDTO;
@@ -21,7 +22,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
-import org.testcontainers.utility.TestcontainersConfiguration;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -30,7 +30,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-@Import(TestcontainersConfiguration.class)
+@Import(TestContainerConfig.class)
 class AuthControllerIntegrationTest {
 
     @Autowired
