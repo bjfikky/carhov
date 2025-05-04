@@ -6,6 +6,7 @@ import com.benorim.carhov.entity.CarHovUser;
 import com.benorim.carhov.entity.RideSchedule;
 import com.benorim.carhov.entity.Vehicle;
 import com.benorim.carhov.enums.DayOfWeek;
+import com.benorim.carhov.exception.DataOwnershipException;
 import com.benorim.carhov.repository.CarHovUserRepository;
 import com.benorim.carhov.repository.RideScheduleRepository;
 import com.benorim.carhov.repository.VehicleRepository;
@@ -46,11 +47,15 @@ class RideScheduleServiceTest {
     @Mock
     private VehicleRepository vehicleRepository;
 
+    @Mock
+    private AuthService authService;
+
     @InjectMocks
     private RideScheduleService rideScheduleService;
 
     private CarHovUser user;
     private RideSchedule rideSchedule;
+    private Vehicle vehicle;
     private CreateRideScheduleDTO createRideScheduleDTO;
 
     @BeforeEach
@@ -61,6 +66,10 @@ class RideScheduleServiceTest {
         rideSchedule = new RideSchedule();
         rideSchedule.setId(1L);
         rideSchedule.setUser(user);
+
+        vehicle = new Vehicle();
+        vehicle.setId(1L);
+        vehicle.setUser(user);
 
         createRideScheduleDTO = new CreateRideScheduleDTO();
         createRideScheduleDTO.setUserId(1L);
@@ -78,7 +87,8 @@ class RideScheduleServiceTest {
     void createRideSchedule_Success() {
         when(carHovUserRepository.findById(1L)).thenReturn(Optional.of(user));
         when(rideScheduleRepository.save(any(RideSchedule.class))).thenReturn(rideSchedule);
-        when(vehicleRepository.findById(1L)).thenReturn(Optional.of(new Vehicle()));
+        when(vehicleRepository.findById(1L)).thenReturn(Optional.of(vehicle));
+        when(authService.isRequestMadeByLoggedInUser(user)).thenReturn(true);
 
         RideSchedule result = rideScheduleService.createRideSchedule(createRideScheduleDTO);
 
@@ -135,6 +145,13 @@ class RideScheduleServiceTest {
 
         assertTrue(result);
         verify(rideScheduleRepository, times(1)).delete(rideSchedule);
+    }
+
+    @Test
+    void deleteRideSchedule_Failed_NotLoggedIntUser() {
+        when(rideScheduleRepository.findById(1L)).thenReturn(Optional.of(rideSchedule));
+        when(authService.isRequestMadeByLoggedInUser(user)).thenThrow(new DataOwnershipException("User not logged in"));
+        assertThrows(DataOwnershipException.class, () -> rideScheduleService.deleteRideSchedule(1L));
     }
 
     @Test
