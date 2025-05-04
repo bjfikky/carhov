@@ -97,7 +97,7 @@ CarHov follows a layered architecture pattern:
 - **Testing**
   - JUnit 5
   - Mockito
-  - Testcontainers
+  - Testcontainers for Integration Tests
 
 - **DevOps & Infrastructure**
   - Docker

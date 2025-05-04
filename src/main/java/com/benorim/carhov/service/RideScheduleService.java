@@ -6,6 +6,7 @@ import com.benorim.carhov.dto.rideSchedule.SearchRideScheduleDTO;
 import com.benorim.carhov.entity.CarHovUser;
 import com.benorim.carhov.entity.RideSchedule;
 import com.benorim.carhov.entity.Vehicle;
+import com.benorim.carhov.exception.DataOwnershipException;
 import com.benorim.carhov.mapper.RideScheduleMapper;
 import com.benorim.carhov.repository.CarHovUserRepository;
 import com.benorim.carhov.repository.RideScheduleRepository;
@@ -27,6 +28,7 @@ public class RideScheduleService {
     private final RideScheduleRepository rideScheduleRepository;
     private final CarHovUserRepository carHovUserRepository;
     private final VehicleRepository vehicleRepository;
+    private final AuthService authService;
 
     public RideSchedule createRideSchedule(CreateRideScheduleDTO createRideScheduleDTO) {
         log.info("Creating new ride schedule for user ID: {}", createRideScheduleDTO.getUserId());
@@ -36,6 +38,12 @@ public class RideScheduleService {
 
         Vehicle vehicle = vehicleRepository.findById(createRideScheduleDTO.getVehicleId())
                 .orElseThrow(() -> new IllegalArgumentException("Vehicle not found with ID: " + createRideScheduleDTO.getVehicleId()));
+
+        authService.isRequestMadeByLoggedInUser(user);
+
+        if (!vehicle.getUser().getId().equals(user.getId())) {
+            throw new DataOwnershipException("Vehicle does not belong to user");
+        }
 
         RideSchedule rideSchedule = RideScheduleMapper.toEntity(createRideScheduleDTO, user, vehicle);
         
@@ -56,6 +64,8 @@ public class RideScheduleService {
         log.info("Updating ride schedule with ID: {}", rideScheduleId);
         return rideScheduleRepository.findById(rideScheduleId)
                 .map(existingRideSchedule -> {
+                    CarHovUser user = existingRideSchedule.getUser();
+                    authService.isRequestMadeByLoggedInUser(user);
                     // Only update fields that are provided
                     if (updatedRideSchedule.getStartLatitude() != 0) {
                         existingRideSchedule.setStartLatitude(updatedRideSchedule.getStartLatitude());
@@ -91,6 +101,8 @@ public class RideScheduleService {
         log.info("Deleting ride schedule with ID: {}", rideScheduleId);
         return rideScheduleRepository.findById(rideScheduleId)
                 .map(rideSchedule -> {
+                    CarHovUser user = rideSchedule.getUser();
+                    authService.isRequestMadeByLoggedInUser(user);
                     rideScheduleRepository.delete(rideSchedule);
                     return true;
                 })
