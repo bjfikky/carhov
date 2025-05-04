@@ -1,5 +1,6 @@
 package com.benorim.carhov.api;
 
+import com.benorim.carhov.config.TestContainerConfig;
 import com.benorim.carhov.dto.auth.JwtResponseDTO;
 import com.benorim.carhov.dto.auth.LoginRequestDTO;
 import com.benorim.carhov.dto.auth.MessageResponseDTO;
@@ -30,7 +31,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
-import org.testcontainers.utility.TestcontainersConfiguration;
 
 import java.time.LocalTime;
 import java.util.List;
@@ -42,7 +42,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-@Import(TestcontainersConfiguration.class)
+@Import(TestContainerConfig.class)
 public class RideScheduleControllerIntegrationTest {
 
     public static final String TEST_PASSWORD = "password123";
