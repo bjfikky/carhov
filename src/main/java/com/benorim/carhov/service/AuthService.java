@@ -87,6 +87,22 @@ public class AuthService {
         return currentUser.getId();
     }
 
+    public boolean isSuperAdmin() {
+        return adminType(RoleType.ROLE_SUPER_ADMIN);
+    }
+
+    public boolean isAdmin() {
+        return adminType(RoleType.ROLE_ADMIN);
+    }
+
+    public boolean isUser() {
+        return adminType(RoleType.ROLE_USER);
+    }
+
+    public boolean isRequestMadeByLoggedInUserOrAdmin(CarHovUser user) {
+        return isSuperAdmin() || isAdmin() || isRequestMadeByLoggedInUser(user);
+    }
+
     public boolean isRequestMadeByLoggedInUser(CarHovUser user) {
         if (user == null) {
             throw new DataOwnershipException("User not found");
@@ -102,5 +118,12 @@ public class AuthService {
             throw new DataOwnershipException("User id mismatch");
         }
         return true;
+    }
+
+    private static boolean adminType(RoleType roleType) {
+        UserDetailsImpl currentUser = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return currentUser.getAuthorities()
+                .stream()
+                .anyMatch(authority -> authority.getAuthority().equals(roleType.name()));
     }
 }

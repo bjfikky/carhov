@@ -67,8 +67,7 @@ public class VehicleService {
         Vehicle vehicle = vehicleRepository.findById(vehicleId)
                 .orElseThrow(() -> new IllegalArgumentException("Vehicle not found with ID: " + vehicleId));
 
-        // TODO: An admin should be able to use this method too. Add an || isAdminUser
-        authService.isRequestMadeByLoggedInUser(vehicle.getUser());
+        authService.isRequestMadeByLoggedInUserOrAdmin(vehicle.getUser());
 
         return vehicle;
     }
@@ -78,7 +77,7 @@ public class VehicleService {
         CarHovUser user = carHovUserRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("User not found with ID: " + userId));
         List<Vehicle> vehicles = vehicleRepository.findByUserId(userId);
-        authService.isRequestMadeByLoggedInUser(user);
+        authService.isRequestMadeByLoggedInUserOrAdmin(user);
         return vehicles;
     }
 }

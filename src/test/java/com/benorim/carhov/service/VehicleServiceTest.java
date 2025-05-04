@@ -113,13 +113,21 @@ public class VehicleServiceTest {
     @Test
     void findVehiclesByUserId() {
         when(vehicleRepository.findByUserId(1L)).thenReturn(Collections.singletonList(vehicle));
-        when(authService.isRequestMadeByLoggedInUser(user)).thenReturn(true);
         when(carHovUserRepository.findById(1L)).thenReturn(Optional.of(user));
 
         List<Vehicle> result = vehicleService.findVehiclesByUserId(1L);
 
         assertEquals(1, result.size());
         assertEquals(1L, result.getFirst().getId());
+    }
+
+    @Test
+    void findVehiclesByUserId_Throws_DataOwnershipException() {
+        when(vehicleRepository.findByUserId(1L)).thenReturn(Collections.singletonList(vehicle));
+        when(carHovUserRepository.findById(1L)).thenReturn(Optional.of(user));
+        when(authService.isRequestMadeByLoggedInUserOrAdmin(user)).thenThrow(new DataOwnershipException("User id mismatch"));
+
+        assertThrows(DataOwnershipException.class, () -> vehicleService.findVehiclesByUserId(1L)) ;
     }
 
     @Test
